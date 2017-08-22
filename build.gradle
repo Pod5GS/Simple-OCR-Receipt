@@ -1,0 +1,42 @@
+/*
+ * This build file was generated with the following command, and subsequently edited by hand:
+ * gradle init --type java-application
+ *
+ * This generated file contains a sample Java project to get you started.
+ * For more details take a look at the Java Quickstart chapter in the Gradle
+ * user guide available at https://docs.gradle.org/4.1/userguide/tutorial_java_projects.html
+ */
+
+// Apply the java plugin to add support for Java generally
+apply plugin: 'java'
+
+// Apply the application plugin to add support for building and running an application
+apply plugin: 'application'
+
+// Define the main class for the application.  This is what gets executed when you do `gradle run`
+mainClassName = 'SimpleApplication'
+
+// Dropwizard requires two params - whether to run in "server" mode, or in "check configuration" mode
+// and a configuration file
+run {
+    args "server", "appconfig.yml"
+}
+
+// You should really specify which version of Java we are building for - otherwise
+// you'll be subject to defaults in your environment, which can have unexpected values
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.  99% of the time you won't need anything else
+    jcenter()
+}
+
+dependencies {
+    // Compile dependencies will be available on compile classpath of this component and consumers.
+    compile 'com.google.guava:guava:22.0'              // Great java utility library
+    compile 'io.dropwizard:dropwizard-core:1.2.0-rc2'  // Great implementation of many basic Java Server libs
+
+    testCompile 'junit:junit:4.12'
+}
