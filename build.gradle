@@ -38,5 +38,7 @@ dependencies {
     compile 'com.google.guava:guava:22.0'              // Great java utility library
     compile 'io.dropwizard:dropwizard-core:1.2.0-rc2'  // Great implementation of many basic Java Server libs
 
+    compile 'com.h2database:h2:1.4.196'                // in-memory SQL. we'll upgrade to mysql later
+
     testCompile 'junit:junit:4.12'
 }
