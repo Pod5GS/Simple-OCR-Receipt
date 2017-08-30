@@ -62,30 +62,32 @@ dependencies {
 }
 
 
-task generate << {
-    def writer = new StringWriter()
-    new groovy.xml.MarkupBuilder(writer)
-            .configuration('xmlns': 'http://www.jooq.org/xsd/jooq-codegen-3.7.0.xsd') {
-        jdbc() {
-            driver('org.h2.Driver')
-            url('jdbc:h2:/tmp/test;MODE=MYSQL')
-            user('sa')
-            password('sa')
-        }
-        generator() {
-            database() {
-                name('org.jooq.util.mysql.MySQLDatabase')
-                inputSchema('public')
+task generate {
+    doLast {
+        def writer = new StringWriter()
+        new groovy.xml.MarkupBuilder(writer)
+                .configuration('xmlns': 'http://www.jooq.org/xsd/jooq-codegen-3.7.0.xsd') {
+            jdbc() {
+                driver('org.h2.Driver')
+                url('jdbc:h2:/tmp/test')
+                user('sa')
+                password('sa')
             }
-            generate() {}
-            target() {
-                packageName('generated')
-                directory('src/main/java')
+            generator() {
+                database() {
+                    name('org.jooq.util.h2.H2Database')
+                    inputSchema('public')
+                }
+                generate() {}
+                target() {
+                    packageName('generated')
+                    directory('src/main/java')
+                }
             }
         }
-    }
 
-    org.jooq.util.GenerationTool.generate(
-            javax.xml.bind.JAXB.unmarshal(new StringReader(writer.toString()), org.jooq.util.jaxb.Configuration.class)
-    )
+        org.jooq.util.GenerationTool.generate(
+                javax.xml.bind.JAXB.unmarshal(new StringReader(writer.toString()), org.jooq.util.jaxb.Configuration.class)
+        )
+    }
 }
