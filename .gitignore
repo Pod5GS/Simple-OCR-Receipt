@@ -7,3 +7,6 @@
 
 # These are compiled artifacts
 /build
+
+# This is where intellij builds the project
+/out
