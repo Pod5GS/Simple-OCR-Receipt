@@ -10,7 +10,5 @@ public class CreateReceiptRequest {
     @NotEmpty
     public String merchantName;
 
-    @NotNull
-    @Min(0)
     public BigDecimal value;
 }

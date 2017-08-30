@@ -9,7 +9,7 @@ import generated.Public;
 import generated.tables.records.ReceiptsRecord;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Receipts extends TableImpl<ReceiptsRecord> {
 
-	private static final long serialVersionUID = 399889549;
+	private static final long serialVersionUID = 1297454298;
 
 	/**
 	 * The reference instance of <code>public.receipts</code>
@@ -57,24 +57,19 @@ public class Receipts extends TableImpl<ReceiptsRecord> {
 	public final TableField<ReceiptsRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaulted(true), this, "");
 
 	/**
-	 * The column <code>public.receipts.uploaded</code>.
+	 * The column <code>public.receipts.merchantname</code>.
 	 */
-	public final TableField<ReceiptsRecord, Time> UPLOADED = createField("uploaded", org.jooq.impl.SQLDataType.TIME.defaulted(true), this, "");
+	public final TableField<ReceiptsRecord, String> MERCHANTNAME = createField("merchantname", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
 
 	/**
-	 * The column <code>public.receipts.merchant</code>.
+	 * The column <code>public.receipts.value</code>.
 	 */
-	public final TableField<ReceiptsRecord, String> MERCHANT = createField("merchant", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
+	public final TableField<ReceiptsRecord, BigDecimal> VALUE = createField("value", org.jooq.impl.SQLDataType.DECIMAL.precision(15, 2), this, "");
 
 	/**
-	 * The column <code>public.receipts.amount</code>.
+	 * The column <code>public.receipts.date_created</code>.
 	 */
-	public final TableField<ReceiptsRecord, BigDecimal> AMOUNT = createField("amount", org.jooq.impl.SQLDataType.DECIMAL.precision(12, 2), this, "");
-
-	/**
-	 * The column <code>public.receipts.receipt_type</code>.
-	 */
-	public final TableField<ReceiptsRecord, Integer> RECEIPT_TYPE = createField("receipt_type", org.jooq.impl.SQLDataType.INTEGER, this, "");
+	public final TableField<ReceiptsRecord, Date> DATE_CREATED = createField("date_created", org.jooq.impl.SQLDataType.DATE.defaulted(true), this, "");
 
 	/**
 	 * Create a <code>public.receipts</code> table reference
