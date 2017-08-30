@@ -76,7 +76,7 @@ task generate {
             generator() {
                 database() {
                     name('org.jooq.util.h2.H2Database')
-                    inputSchema('public')
+                    inputSchema('PUBLIC')
                 }
                 generate() {}
                 target() {
