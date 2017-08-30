@@ -7,6 +7,17 @@
  * user guide available at https://docs.gradle.org/4.1/userguide/tutorial_java_projects.html
  */
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.jooq:jooq-codegen:3.7.4'
+        classpath 'com.h2database:h2:1.4.177'
+    }
+}
+
 // Apply the java plugin to add support for Java generally
 apply plugin: 'java'
 
@@ -33,12 +44,48 @@ repositories {
     jcenter()
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
 dependencies {
     // Compile dependencies will be available on compile classpath of this component and consumers.
-    compile 'com.google.guava:guava:22.0'              // Great java utility library
-    compile 'io.dropwizard:dropwizard-core:1.2.0-rc2'  // Great implementation of many basic Java Server libs
+    compile 'com.google.guava:guava:22.0'               // Great java utility library
+    compile 'io.dropwizard:dropwizard-core:1.2.0-rc2'   // Great implementation of many basic Java Server libs
+    compile 'io.dropwizard:dropwizard-db:1.2.0-rc2'     // Provides manages data sources
 
-    compile 'com.h2database:h2:1.4.196'                // in-memory SQL. we'll upgrade to mysql later
+    compile 'org.jooq:jooq:3.9.5'                       // DSL for SQL in java
+    compile 'com.h2database:h2:1.4.196'                 // in-memory SQL. we'll upgrade to mysql later
 
     testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+}
+
+
+task generate << {
+    def writer = new StringWriter()
+    new groovy.xml.MarkupBuilder(writer)
+            .configuration('xmlns': 'http://www.jooq.org/xsd/jooq-codegen-3.7.0.xsd') {
+        jdbc() {
+            driver('org.h2.Driver')
+            url('jdbc:h2:/tmp/test;MODE=MYSQL')
+            user('sa')
+            password('sa')
+        }
+        generator() {
+            database() {
+                name('org.jooq.util.mysql.MySQLDatabase')
+                inputSchema('public')
+            }
+            generate() {}
+            target() {
+                packageName('generated')
+                directory('src/main/java')
+            }
+        }
+    }
+
+    org.jooq.util.GenerationTool.generate(
+            javax.xml.bind.JAXB.unmarshal(new StringReader(writer.toString()), org.jooq.util.jaxb.Configuration.class)
+    )
 }
