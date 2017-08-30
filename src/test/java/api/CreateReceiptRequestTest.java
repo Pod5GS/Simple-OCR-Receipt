@@ -32,14 +32,4 @@ public class CreateReceiptRequestTest {
         validator.validate(receipt);
         assertThat(validator.validate(receipt), hasSize(1));
     }
-
-    @Test
-    public void testMissingValue() {
-        CreateReceiptRequest receipt = new CreateReceiptRequest();
-        receipt.merchantName = "OK";
-
-        validator.validate(receipt);
-        assertThat(validator.validate(receipt), hasSize(1));
-    }
-
 }
