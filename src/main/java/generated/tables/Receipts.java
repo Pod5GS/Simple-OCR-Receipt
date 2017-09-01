@@ -36,10 +36,10 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Receipts extends TableImpl<ReceiptsRecord> {
 
-	private static final long serialVersionUID = 1562494029;
+	private static final long serialVersionUID = 399889549;
 
 	/**
-	 * The reference instance of <code>PUBLIC.RECEIPTS</code>
+	 * The reference instance of <code>public.receipts</code>
 	 */
 	public static final Receipts RECEIPTS = new Receipts();
 
@@ -52,39 +52,39 @@ public class Receipts extends TableImpl<ReceiptsRecord> {
 	}
 
 	/**
-	 * The column <code>PUBLIC.RECEIPTS.ID</code>.
+	 * The column <code>public.receipts.id</code>.
 	 */
-	public final TableField<ReceiptsRecord, Integer> ID = createField("ID", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaulted(true), this, "");
+	public final TableField<ReceiptsRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaulted(true), this, "");
 
 	/**
-	 * The column <code>PUBLIC.RECEIPTS.UPLOADED</code>.
+	 * The column <code>public.receipts.uploaded</code>.
 	 */
-	public final TableField<ReceiptsRecord, Time> UPLOADED = createField("UPLOADED", org.jooq.impl.SQLDataType.TIME.defaulted(true), this, "");
+	public final TableField<ReceiptsRecord, Time> UPLOADED = createField("uploaded", org.jooq.impl.SQLDataType.TIME.defaulted(true), this, "");
 
 	/**
-	 * The column <code>PUBLIC.RECEIPTS.MERCHANT</code>.
+	 * The column <code>public.receipts.merchant</code>.
 	 */
-	public final TableField<ReceiptsRecord, String> MERCHANT = createField("MERCHANT", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
+	public final TableField<ReceiptsRecord, String> MERCHANT = createField("merchant", org.jooq.impl.SQLDataType.VARCHAR.length(255), this, "");
 
 	/**
-	 * The column <code>PUBLIC.RECEIPTS.AMOUNT</code>.
+	 * The column <code>public.receipts.amount</code>.
 	 */
-	public final TableField<ReceiptsRecord, BigDecimal> AMOUNT = createField("AMOUNT", org.jooq.impl.SQLDataType.DECIMAL.precision(12, 2), this, "");
+	public final TableField<ReceiptsRecord, BigDecimal> AMOUNT = createField("amount", org.jooq.impl.SQLDataType.DECIMAL.precision(12, 2), this, "");
 
 	/**
-	 * The column <code>PUBLIC.RECEIPTS.RECEIPT_TYPE</code>.
+	 * The column <code>public.receipts.receipt_type</code>.
 	 */
-	public final TableField<ReceiptsRecord, Integer> RECEIPT_TYPE = createField("RECEIPT_TYPE", org.jooq.impl.SQLDataType.INTEGER, this, "");
+	public final TableField<ReceiptsRecord, Integer> RECEIPT_TYPE = createField("receipt_type", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
 	/**
-	 * Create a <code>PUBLIC.RECEIPTS</code> table reference
+	 * Create a <code>public.receipts</code> table reference
 	 */
 	public Receipts() {
-		this("RECEIPTS", null);
+		this("receipts", null);
 	}
 
 	/**
-	 * Create an aliased <code>PUBLIC.RECEIPTS</code> table reference
+	 * Create an aliased <code>public.receipts</code> table reference
 	 */
 	public Receipts(String alias) {
 		this(alias, RECEIPTS);

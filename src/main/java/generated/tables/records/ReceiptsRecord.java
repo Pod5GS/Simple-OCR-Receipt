@@ -31,73 +31,73 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ReceiptsRecord extends UpdatableRecordImpl<ReceiptsRecord> implements Record5<Integer, Time, String, BigDecimal, Integer> {
 
-	private static final long serialVersionUID = 1002208733;
+	private static final long serialVersionUID = -1941296675;
 
 	/**
-	 * Setter for <code>PUBLIC.RECEIPTS.ID</code>.
+	 * Setter for <code>public.receipts.id</code>.
 	 */
 	public void setId(Integer value) {
 		setValue(0, value);
 	}
 
 	/**
-	 * Getter for <code>PUBLIC.RECEIPTS.ID</code>.
+	 * Getter for <code>public.receipts.id</code>.
 	 */
 	public Integer getId() {
 		return (Integer) getValue(0);
 	}
 
 	/**
-	 * Setter for <code>PUBLIC.RECEIPTS.UPLOADED</code>.
+	 * Setter for <code>public.receipts.uploaded</code>.
 	 */
 	public void setUploaded(Time value) {
 		setValue(1, value);
 	}
 
 	/**
-	 * Getter for <code>PUBLIC.RECEIPTS.UPLOADED</code>.
+	 * Getter for <code>public.receipts.uploaded</code>.
 	 */
 	public Time getUploaded() {
 		return (Time) getValue(1);
 	}
 
 	/**
-	 * Setter for <code>PUBLIC.RECEIPTS.MERCHANT</code>.
+	 * Setter for <code>public.receipts.merchant</code>.
 	 */
 	public void setMerchant(String value) {
 		setValue(2, value);
 	}
 
 	/**
-	 * Getter for <code>PUBLIC.RECEIPTS.MERCHANT</code>.
+	 * Getter for <code>public.receipts.merchant</code>.
 	 */
 	public String getMerchant() {
 		return (String) getValue(2);
 	}
 
 	/**
-	 * Setter for <code>PUBLIC.RECEIPTS.AMOUNT</code>.
+	 * Setter for <code>public.receipts.amount</code>.
 	 */
 	public void setAmount(BigDecimal value) {
 		setValue(3, value);
 	}
 
 	/**
-	 * Getter for <code>PUBLIC.RECEIPTS.AMOUNT</code>.
+	 * Getter for <code>public.receipts.amount</code>.
 	 */
 	public BigDecimal getAmount() {
 		return (BigDecimal) getValue(3);
 	}
 
 	/**
-	 * Setter for <code>PUBLIC.RECEIPTS.RECEIPT_TYPE</code>.
+	 * Setter for <code>public.receipts.receipt_type</code>.
 	 */
 	public void setReceiptType(Integer value) {
 		setValue(4, value);
 	}
 
 	/**
-	 * Getter for <code>PUBLIC.RECEIPTS.RECEIPT_TYPE</code>.
+	 * Getter for <code>public.receipts.receipt_type</code>.
 	 */
 	public Integer getReceiptType() {
 		return (Integer) getValue(4);

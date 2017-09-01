@@ -10,7 +10,7 @@ import javax.annotation.Generated;
 
 
 /**
- * Convenience access to all tables in PUBLIC
+ * Convenience access to all tables in public
  */
 @Generated(
 	value = {
@@ -23,7 +23,7 @@ import javax.annotation.Generated;
 public class Tables {
 
 	/**
-	 * The table PUBLIC.RECEIPTS
+	 * The table public.receipts
 	 */
 	public static final Receipts RECEIPTS = generated.tables.Receipts.RECEIPTS;
 }
