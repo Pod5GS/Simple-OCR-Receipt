@@ -21,7 +21,9 @@ public class SimpleApplication extends Application<Configuration> {
 
     public static org.jooq.Configuration setupJooq() {
         // For now we are just going to use an H2 Database.  We'll upgrade to mysql later
-        JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:/tmp/test;MODE=MySQL", "sa", "sa");
+        // This connection string tells H2 to initialize itself with our schema.sql before allowing connections
+        final String jdbcUrl = "jdbc:h2:mem:test;MODE=MySQL;INIT=RUNSCRIPT from 'classpath:schema.sql'";
+        JdbcConnectionPool cp = JdbcConnectionPool.create(jdbcUrl, "sa", "sa");
 
         // This sets up jooq to talk to whatever database we are using.
         org.jooq.Configuration jooqConfig = new DefaultConfiguration();

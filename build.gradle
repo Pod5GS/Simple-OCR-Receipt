@@ -69,14 +69,14 @@ task generate {
                 .configuration('xmlns': 'http://www.jooq.org/xsd/jooq-codegen-3.7.0.xsd') {
             jdbc() {
                 driver('org.h2.Driver')
-                url('jdbc:h2:/tmp/test')
+                url('jdbc:h2:mem:test;MODE=MySQL;INIT=RUNSCRIPT from \'./src/main/resources/schema.sql\'')
                 user('sa')
                 password('sa')
             }
             generator() {
                 database() {
                     name('org.jooq.util.h2.H2Database')
-                    inputSchema('PUBLIC')
+                    inputSchema('public')
                 }
                 generate() {}
                 target() {
