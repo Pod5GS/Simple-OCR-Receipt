@@ -32,5 +32,6 @@ public class ReceiptResponse {
         this.merchantName = dbRecord.getMerchant();
         this.value = dbRecord.getAmount();
         this.created = dbRecord.getUploaded();
+        this.id = dbRecord.getId();
     }
 }
