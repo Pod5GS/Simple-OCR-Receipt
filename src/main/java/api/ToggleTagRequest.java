@@ -1,7 +1,9 @@
 package api;
-import org.hibernate.validator.constraints.NotEmpty;
+
+
+import javax.validation.constraints.NotNull;
 
 public class ToggleTagRequest {
-    @NotEmpty
+    @NotNull
     public int receipt_id;
 }
