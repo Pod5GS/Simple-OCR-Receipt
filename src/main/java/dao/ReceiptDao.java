@@ -34,4 +34,11 @@ public class ReceiptDao {
     public List<ReceiptsRecord> getAllReceipts() {
         return dsl.selectFrom(RECEIPTS).fetch();
     }
+
+    public ReceiptsRecord getReceiptByMerchant(String merchant) {
+        return dsl
+                .selectFrom(RECEIPTS)
+                .where(RECEIPTS.MERCHANT.eq(merchant))
+                .fetchOne();
+    }
 }
