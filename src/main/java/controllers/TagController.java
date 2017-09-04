@@ -1,7 +1,6 @@
 package controllers;
 
 import api.ReceiptResponse;
-import api.ToggleTagRequest;
 import dao.ReceiptDao;
 import dao.TagDao;
 import generated.tables.records.ReceiptsRecord;
@@ -25,8 +24,8 @@ public class TagController {
     }
 
     @PUT
-    public void toggleTag(ToggleTagRequest req, @PathParam("tag") String tagName){
-        tags.toggleTag(req.receipt_id, tagName);
+    public void toggleTag(String request_body, @PathParam("tag") String tagName){
+        tags.toggleTag(Integer.parseInt(request_body), tagName);
     }
 
     @GET
