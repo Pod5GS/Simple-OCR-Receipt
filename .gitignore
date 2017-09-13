@@ -10,3 +10,6 @@
 
 # This is where intellij builds the project
 /out
+
+# These are Mac .DS_Store files
+.DS_Store
