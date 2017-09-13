@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css" />
+    <script data-require="jquery@*" data-semver="3.1.1" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        #container {border: 1px solid brown;}
+        H1 {float: left;}
+
+        .button{
+            background-color:#55A;
+            border: 1px solid #229;
+            width: 100px;
+            float: right;
+            font-size: 2em;
+            color: white;
+            text-align: center;
+        }
+
+        #receiptList {
+            border: 1px solid green;
+            clear: both;
+        }
+
+        .receipt {
+            background-color: #eee;
+            margin-bottom: 5px;
+        }
+
+    </style>
+    <script>
+        // This is the idiomatic way to ensure that JQuery does not
+        // execute until the page has loaded
+        $(function(){
+            const api = ""; // <- do not need a root api URL if this page is served directly by the API
+
+            $.getJSON(api+"/receipts", function(receipts){
+                for(var i=0; i < receipts.length; i++) {
+                    var receipt = receipts[i];
+                    $(`<div class="receipt">${receipt.merchantName}<div><span class="receiptTag">t1</span></div></div>`)
+                        .appendTo($("#receiptList"));
+                }
+
+            })
+        })
+    </script>
+</head>
+
+<body>
+<DIV id="container">
+    <h1>My receipts</h1>
+    <div class="button">+</div>
+    <div id="receiptList">
+    </div>
+</DIV>
+</body>
+
+</html>
