@@ -7,6 +7,7 @@ import org.jooq.impl.DSL;
 import java.util.List;
 
 import static generated.Tables.TAGS;
+import generated.tables.records.TagsRecord;
 
 public class TagDao {
     DSLContext dsl;
@@ -28,5 +29,9 @@ public class TagDao {
 
     public List<Integer> getReceiptsByTagName(String tagName){
         return dsl.selectFrom(TAGS).where(TAGS.NAME.eq(tagName)).fetch(TAGS.RECEIPT_ID);
+    }
+
+    public List<TagsRecord> getAllTags(){
+        return dsl.selectFrom(TAGS).fetch();
     }
 }

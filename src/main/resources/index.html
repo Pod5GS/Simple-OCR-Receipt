@@ -2,58 +2,294 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="style.css" />
-    <script data-require="jquery@*" data-semver="3.1.1" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.7.0/sweetalert2.min.css">
+    <script data-require="jquery@*" data-semver="3.1.1"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.7.0/sweetalert2.min.js"></script>
     <style>
-        #container {border: 1px solid brown;}
-        H1 {float: left;}
+        .row {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display:         flex;
+            flex-wrap: wrap;
+        }
 
-        .button{
-            background-color:#55A;
-            border: 1px solid #229;
-            width: 100px;
-            float: right;
-            font-size: 2em;
-            color: white;
-            text-align: center;
+        .row > [class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-add {
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
 
         #receiptList {
-            border: 1px solid green;
-            clear: both;
+        }
+
+        .receipt-th {
+            background-color: rgba(0, 0, 0, .075);
+            font-size: large;
+            font-weight: 900;
+            height: auto;
         }
 
         .receipt {
-            background-color: #eee;
+            font-size: x-large;
+        }
+
+        .receipt-td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .tag_input {
+            background-color: #5bc0de;
+            text-align: center;
+            color: white;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .add-tag {
+            margin-top: 5px;
             margin-bottom: 5px;
         }
 
+        .tag{
+            margin-bottom: 5px;
+            font-size: 14px;
+            padding: .3em .4em .4em;
+        }
+
+        .modal {
+            text-align: center;
+            padding: 0 !important;
+        }
+
+        .modal:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -4px;
+        }
+
+        .modal-dialog {
+            display: inline-block;
+            text-align: left;
+            vertical-align: middle;
+        }
     </style>
-    <script>
-        // This is the idiomatic way to ensure that JQuery does not
-        // execute until the page has loaded
-        $(function(){
-            const api = ""; // <- do not need a root api URL if this page is served directly by the API
-
-            $.getJSON(api+"/receipts", function(receipts){
-                for(var i=0; i < receipts.length; i++) {
-                    var receipt = receipts[i];
-                    $(`<div class="receipt">${receipt.merchantName}<div><span class="receiptTag">t1</span></div></div>`)
-                        .appendTo($("#receiptList"));
-                }
-
-            })
-        })
-    </script>
 </head>
 
 <body>
-<DIV id="container">
-    <h1>My receipts</h1>
-    <div class="button">+</div>
+<DIV id="container" class="col-xs-12 col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 container">
+    <div class="row">
+        <h1 class="col-sm-6">My receipts</h1>
+        <a id="add-receipt" class="btn btn-info btn-lg btn-add col-sm-6" data-toggle="modal" data-target="#addmodal">Add
+            Receipt</a>
+    </div>
     <div id="receiptList">
+        <div class="receipt-th row">
+            <div class="col-sm-3 col-xs-12 receipt-td">Time</div>
+            <div class="col-sm-3 col-xs-12 receipt-td">Merchant</div>
+            <div class="col-sm-3 col-xs-12 receipt-td">$</div>
+            <div class="col-sm-3 col-xs-12 receipt-td">Tags</div>
+        </div>
     </div>
 </DIV>
+<div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="exampleModalLabel">New Receipt</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="merchant" class="control-label">Merchant:</label>
+                        <input placeholder="Input Merchant Name" type="text" class="form-control" id="merchant" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount" class="control-label">Amount:</label>
+                        <input placeholder="Input Amount" type="text" class="form-control" id="amount">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-receipt" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="save-receipt" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // This is the idiomatic way to ensure that JQuery does not
+    // execute until the page has loaded
+    const api = ""; // <- do not need a root api URL if this page is served directly by the API
+    function bind_tag_click(){
+        $('.tag').click(function () {
+            tagValue = $(this).text();
+            id = $(this).parent().attr('receipt-id');
+            $.ajax({
+                type: "PUT",
+                url: api + '/tags/' + tagValue,
+                contentType:"application/json",
+                data: id,
+                success: function () {
+                    get_all_receipts();
+                },
+                error: function () {
+                    swal(
+                        'Oops...',
+                        'Something went wrong!',
+                        'error'
+                    );
+                }
+            });
+        });
+    }
+    function bind_triggers() {
+        $('.add-tag').click(function () {
+            $(this).prev().show();
+            $(this).prev().focus();
+        });
+        $('.tag_input').keypress(function (event) {
+            if (event.keyCode == 13) {
+                tagValue = $(this).val();
+                parent = $(this).parent();
+                tag_input = $(this);
+                current_tags = parent.find(".tag");
+                for(var i = 0; i < current_tags.length; i++){
+                    if(tagValue == $(current_tags[i]).text()){
+                        swal(
+                            'Oops...',
+                            'Tag already exist!',
+                            'error'
+                        );
+                        tag_input.val("");
+                        return
+                    }
+                }
+                $.ajax({
+                    type: "PUT",
+                    url: api + '/tags/' + tagValue,
+                    contentType:"application/json",
+                    data: $(this).attr('receipt-id'),
+                    success: function () {
+                        $('<a class="tag btn btn-warning tagValue">' + tagValue + '<i class="glyphicon glyphicon-remove" style="float:right"></i></a><br>').appendTo(parent);
+                        bind_tag_click();
+                        tag_input.hide();
+                        tag_input.val("");
+                    },
+                    error: function () {
+                        swal(
+                            'Oops...',
+                            'Something went wrong!',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    }
+    function get_all_tags() {
+        $.getJSON(api + "/gettags", function (tags) {
+            for(var i = 0; i < tags.length; i++){
+                var tag = tags[i];
+                $(".tags[receipt-id=" + tag.receiptId + "]").append('<a class="tag btn btn-warning tagValue">' + tag.tagName + '<i class="glyphicon glyphicon-remove" style="float:right"></i></a><br>');
+                bind_tag_click();
+            }
+        })
+    }
+    function get_all_receipts() {
+        $.getJSON(api + "/receipts", function (receipts) {
+            $('#receiptList').empty();
+            $('#receiptList').append('<div class="receipt-th row">\n' +
+                '            <div class="col-sm-3 col-xs-12 receipt-td">Time</div>\n' +
+                '            <div class="col-sm-3 col-xs-12 receipt-td">Merchant</div>\n' +
+                '            <div class="col-sm-3 col-xs-12 receipt-td">$</div>\n' +
+                '            <div class="col-sm-3 col-xs-12 receipt-td">Tags</div>\n' +
+                '        </div>');
+            for (var i = 0; i < receipts.length; i++) {
+                var receipt = receipts[i];
+                $('<div class="receipt row">\n' +
+                    '            <div class="col-sm-3 col-xs-12 receipt-td">' + receipt.created + '</div>\n' +
+                    '            <div class="col-sm-3 col-xs-12 receipt-td merchant">' + receipt.merchantName + '</div>\n' +
+                    '            <div class="col-sm-3 col-xs-12 receipt-td amount">'+ receipt.value + '</div>\n' +
+                    '            <div class="col-sm-3 col-xs-12 receipt-td tags" receipt-id="' + receipt.id + '">'  +
+                    '            <input  placeholder="Enter Tag" type="text" value="" class="tag_input" receipt-id="' + receipt.id + '">\n' +
+                    '            <button type="button" class="btn btn-info add-tag">Add Tag</button><br>\n' +
+                    '            </div>\n' +
+                    '        </div>').appendTo($("#receiptList"));
+            }
+            bind_triggers();
+            get_all_tags();
+        })
+    }
+    $('#cancel-receipt').click(function () {
+        $('#merchant').val("");
+        $('#amount').val("");
+    });
+    $('#save-receipt').click(function () {
+        merchant = $('#merchant').val();
+        amount = $('#amount').val();
+        if(merchant.length == 0){
+            swal(
+                'Oops...',
+                'Merchant Field is Required!',
+                'error'
+            );
+            return
+        }
+        if(!(Math.floor(amount) == amount) || !$.isNumeric(amount)){
+            swal(
+                'Oops...',
+                'Amount must be an integer!',
+                'error'
+            );
+            $('#amount').val("");
+            return
+        }
+        data = {
+            "merchant": merchant,
+            "amount": parseInt(amount)
+        };
+        $.ajax({
+            type: "POST",
+            url: api + "/receipts",
+            Accept : "application/json",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function () {
+                get_all_receipts();
+                $('#cancel-receipt').click();
+                $('#merchant').val("");
+                $('#amount').val("");
+            },
+            error: function () {
+                swal(
+                    'Oops...',
+                    'Something went wrong!',
+                    'error'
+                );
+            }
+        });
+    });
+    $(function () {
+        get_all_receipts();
+    });
+</script>
 </body>
 
 </html>

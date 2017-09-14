@@ -2,6 +2,7 @@ import controllers.NetIdController;
 import controllers.ReceiptController;
 import controllers.TagController;
 import controllers.StaticHtmlController;
+import controllers.GetTagController;
 import dao.ReceiptDao;
 import dao.TagDao;
 import io.dropwizard.Application;
@@ -48,5 +49,6 @@ public class SimpleApplication extends Application<Configuration> {
         env.jersey().register(new StaticHtmlController());
         env.jersey().register(new ReceiptController(receiptDao));
         env.jersey().register(new TagController(receiptDao, tagDao));
+        env.jersey().register(new GetTagController(tagDao));
     }
 }
