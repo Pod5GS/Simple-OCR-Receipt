@@ -12,50 +12,30 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.7.0/sweetalert2.min.js"></script>
     <style>
-        .row {
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: -ms-flexbox;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .row > [class*='col-'] {
-            display: flex;
-            flex-direction: column;
-        }
-
         .btn-add {
             margin-top: 20px;
             margin-bottom: 10px;
         }
 
-        #receiptList {
-        }
-
-        .receipt-th {
-            background-color: rgba(0, 0, 0, .075);
-            font-size: large;
-            font-weight: 900;
-            height: auto;
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
         }
 
         .receipt {
             font-size: x-large;
         }
 
-        .receipt-td {
-            border: 1px solid black;
-            text-align: center;
-        }
-
         .tag_input {
-            background-color: #5bc0de;
             text-align: center;
-            color: white;
-            margin-top: 10px;
-            margin-bottom: 10px;
             display: none;
+            font-size: medium;
+            width: 100px;
         }
 
         .add-tag {
@@ -64,9 +44,22 @@
         }
 
         .tag {
-            margin-bottom: 5px;
+            margin: 5px;
             font-size: 14px;
             padding: .3em .4em .4em;
+            min-width: 100px;
+        }
+
+        .tag i.tag-remove {
+            display: none;
+        }
+
+        .tag:hover span.tagValue {
+            display: none;
+        }
+
+        .tag:hover i.tag-remove {
+            display: block;
         }
 
         .modal {
@@ -97,14 +90,18 @@
         <a id="add-receipt" class="btn btn-info btn-lg btn-add col-sm-6" data-toggle="modal" data-target="#addmodal">Add
             Receipt</a>
     </div>
-    <div id="receiptList">
-        <div class="receipt-th row">
-            <div class="col-sm-3 col-xs-12 receipt-td">Time</div>
-            <div class="col-sm-3 col-xs-12 receipt-td">Merchant</div>
-            <div class="col-sm-3 col-xs-12 receipt-td">$</div>
-            <div class="col-sm-3 col-xs-12 receipt-td">Tags</div>
-        </div>
-    </div>
+    <table class="table table-hover table-bordered">
+        <thead class="receipt-th thead-default">
+        <tr>
+            <th class="receipt-td">Time</th>
+            <th class="receipt-td">Merchant</th>
+            <th class="receipt-td">$</th>
+            <th class="receipt-td">Tags</th>
+        </tr>
+        </thead>
+        <tbody id="receiptList">
+        </tbody>
+    </table>
 </DIV>
 <div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
@@ -139,7 +136,7 @@
     // execute until the page has loaded
     const api = ""; // <- do not need a root api URL if this page is served directly by the API
     $('#receiptList').on("click", ".tag", function () {
-        tagValue = $(this).text();
+        tagValue = $(this).find("span").text();
         id = $(this).parent().attr('receipt-id');
         tag = $(this);
         $.ajax({
@@ -160,15 +157,15 @@
         });
     });
     $('#receiptList').on("click", ".add-tag", function () {
-        $(this).prev().show();
-        $(this).prev().focus();
+        $(this).next().show();
+        $(this).next().focus();
     });
     $('#receiptList').on("keypress", ".tag_input", function (event) {
         if (event.keyCode == 13) {
             tagValue = $(this).val();
             parent = $(this).parent();
             tag_input = $(this);
-            current_tags = parent.find(".tag");
+            current_tags = parent.find(".tagValue");
             for (var i = 0; i < current_tags.length; i++) {
                 if (tagValue == $(current_tags[i]).text()) {
                     swal(
@@ -176,7 +173,7 @@
                         'Tag already exist!',
                         'error'
                     );
-                    tag_input.val("");
+                    tag_input.val(null);
                     return
                 }
             }
@@ -186,9 +183,9 @@
                 contentType: "application/json",
                 data: $(this).attr('receipt-id'),
                 success: function () {
-                    $('<a class="tag btn btn-warning tagValue">' + tagValue + '<i class="glyphicon glyphicon-remove" style="float:right"></i></a><br>').appendTo(parent);
+                    $('<a class="tag btn btn-warning"><span class="tagValue">' + tagValue + '</span><i class="tag-remove">DELETE</i></a>').appendTo(parent);
                     tag_input.hide();
-                    tag_input.val(" ");
+                    tag_input.val(null);
                 },
                 error: function () {
                     swal(
@@ -205,7 +202,7 @@
         $.getJSON(api + "/gettags", function (tags) {
             for (var i = 0; i < tags.length; i++) {
                 var tag = tags[i];
-                $(".tags[receipt-id=" + tag.receiptId + "]").append('<a class="tag btn btn-warning tagValue">' + tag.tagName + '<i class="glyphicon glyphicon-remove" style="float:right"></i></a><br>');
+                $('.tags[receipt-id="' + tag.receiptId + '"]').append('<a class="tag btn btn-warning"><span class="tagValue">' + tag.tagName + '</span><i class="tag-remove">DELETE</i></a>');
             }
         })
     }
@@ -213,23 +210,17 @@
     function get_all_receipts() {
         $.getJSON(api + "/receipts", function (receipts) {
             $('#receiptList').empty();
-            $('#receiptList').append('<div class="receipt-th row">\n' +
-                '            <div class="col-sm-3 col-xs-12 receipt-td">Time</div>\n' +
-                '            <div class="col-sm-3 col-xs-12 receipt-td">Merchant</div>\n' +
-                '            <div class="col-sm-3 col-xs-12 receipt-td">$</div>\n' +
-                '            <div class="col-sm-3 col-xs-12 receipt-td">Tags</div>\n' +
-                '        </div>');
             for (var i = 0; i < receipts.length; i++) {
                 var receipt = receipts[i];
-                $('<div class="receipt row">\n' +
-                    '            <div class="col-sm-3 col-xs-12 receipt-td">' + receipt.created + '</div>\n' +
-                    '            <div class="col-sm-3 col-xs-12 receipt-td merchant">' + receipt.merchantName + '</div>\n' +
-                    '            <div class="col-sm-3 col-xs-12 receipt-td amount">' + receipt.value + '</div>\n' +
-                    '            <div class="col-sm-3 col-xs-12 receipt-td tags" receipt-id="' + receipt.id + '">' +
-                    '            <input  placeholder="Enter Tag" class="tag_input" type="text" receipt-id="' + receipt.id + '">\n' +
-                    '            <button type="button" class="btn btn-info add-tag">Add Tag</button><br>\n' +
-                    '            </div>\n' +
-                    '        </div>').appendTo($("#receiptList"));
+                $('<tr class="receipt">\n' +
+                    '            <td>' + receipt.created + '</td>\n' +
+                    '            <td class="merchant">' + receipt.merchantName + '</td>\n' +
+                    '            <td class="amount">' + receipt.value + '</td>\n' +
+                    '            <td class="tags" receipt-id="' + receipt.id + '">\n' +
+                    '                <button type="button" class="btn btn-info btn-circle add-tag"><i class="glyphicon glyphicon-plus"></i></button>\n' +
+                    '                <input placeholder="Enter Tag" class="tag_input" type="text" receipt-id="' + receipt.id + '">\n' +
+                    '            </td>\n' +
+                    '        </tr>').appendTo($("#receiptList"));
             }
             get_all_tags();
         })
@@ -256,7 +247,7 @@
                 'Amount must be an integer!',
                 'error'
             );
-            $('#amount').val("");
+            $('#amount').val(null);
             return
         }
         data = {
@@ -272,8 +263,8 @@
             success: function () {
                 get_all_receipts();
                 $('#cancel-receipt').click();
-                $('#merchant').val("");
-                $('#amount').val("");
+                $('#merchant').val(null);
+                $('#amount').val(null);
             },
             error: function () {
                 swal(
