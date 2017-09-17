@@ -9,9 +9,9 @@ import java.sql.Time;
 /**
  * This is an API Object.  Its purpose is to model the JSON API that we expose.
  * This class is NOT used for storing in the Database.
- *
+ * <p>
  * This ReceiptResponse in particular is the model of a Receipt that we expose to users of our API
- *
+ * <p>
  * Any properties that you want exposed when this class is translated to JSON must be
  * annotated with {@link JsonProperty}
  */
