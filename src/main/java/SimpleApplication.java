@@ -1,5 +1,4 @@
-import controllers.ReceiptController;
-import controllers.StaticHtmlController;
+import controllers.*;
 import dao.ReceiptDao;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
@@ -41,5 +40,6 @@ public class SimpleApplication extends Application<Configuration> {
         // you need class and method @Path annotations!
         env.jersey().register(new StaticHtmlController());
         env.jersey().register(new ReceiptController(receiptDao));
+        env.jersey().register(new ReceiptImageController());
     }
 }
