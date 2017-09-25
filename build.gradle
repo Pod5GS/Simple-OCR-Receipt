@@ -57,6 +57,9 @@ dependencies {
     compile 'org.jooq:jooq:3.9.5'                       // DSL for SQL in java
     compile 'com.h2database:h2:1.4.196'                 // in-memory SQL. we'll upgrade to mysql later
 
+    // see https://cloud.google.com/vision/docs/reference/libraries
+    compile 'com.google.cloud:google-cloud-vision:0.24.0-beta'  // for Google Vision API
+
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
 }
