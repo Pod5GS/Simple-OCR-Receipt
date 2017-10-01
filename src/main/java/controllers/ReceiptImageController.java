@@ -6,11 +6,11 @@ import com.google.protobuf.ByteString;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import static java.lang.System.out;
 
 @Path("/images")
 @Consumes(MediaType.TEXT_PLAIN)
@@ -51,12 +51,38 @@ public class ReceiptImageController {
             // Your Algo Here!!
             // Sort text annotations by bounding polygon.  Top-most non-decimal text is the merchant
             // bottom-most decimal text is the total amount
-            for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
-                out.printf("Position : %s\n", annotation.getBoundingPoly());
-                out.printf("Text: %s\n", annotation.getDescription());
-            }
+//            for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
+//                out.printf("Position : %s\n", annotation.getBoundingPoly());
+//                out.printf("Text: %s\n", annotation.getDescription());
+//            }
 
-            //TextAnnotation fullTextAnnotation = res.getFullTextAnnotation();
+            TextAnnotation fullTextAnnotation = res.getFullTextAnnotation();
+            String texts = fullTextAnnotation.getText();
+            String[] textList = texts.split("\n");
+            Pattern pattern = Pattern.compile("-?[0-9]+.?[0-9]+");
+            for (String aTextList : textList) {
+                if (!pattern.matcher(aTextList).matches()) {
+                    merchantName = aTextList;
+                    break;
+                }
+            }
+            for(int i = textList.length - 1; i >= 0; i--){
+                try {
+                    if (pattern.matcher(textList[i]).matches()) {
+                        amount = new BigDecimal(textList[i]);
+                        break;
+                    }else if(textList[i].contains("$")){
+                        Pattern p = Pattern.compile("(\\d+(?:\\.\\d+)?)");
+                        Matcher m = p.matcher(textList[i]);
+                        if(m.find()){
+                            amount = new BigDecimal(m.group(1));
+                            break;
+                        }
+                    }
+                }catch (Exception e){
+                    amount = null;
+                }
+            }
             return new ReceiptSuggestionResponse(merchantName, amount);
         }
     }

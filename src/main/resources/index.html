@@ -15,6 +15,7 @@
         .btn-add {
             margin-top: 20px;
             margin-bottom: 10px;
+            width: 50%;
         }
 
         .btn-circle {
@@ -80,15 +81,172 @@
             text-align: left;
             vertical-align: middle;
         }
+
+        video {
+            width: 100%;
+            border: 1px solid black;
+        }
+
+        .loader {
+            color: #752f90;
+            font-size: 90px;
+            text-indent: -9999em;
+            overflow: hidden;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            margin: 72px auto;
+            position: relative;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation: load6 1.7s infinite ease;
+            animation: load6 1.7s infinite ease;
+        }
+        @-webkit-keyframes load6 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+            5%,
+            95% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+            10%,
+            59% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+            }
+            20% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+            }
+            38% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+        }
+        @keyframes load6 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+            5%,
+            95% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+            10%,
+            59% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+            }
+            20% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+            }
+            38% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+        }
     </style>
+    <script>
+        var imageCapture;
+
+        function attachMediaStream(mediaStream) {
+            $('video')[0].srcObject = mediaStream;
+
+            // Saving the track allows us to capture a photo
+            const track = mediaStream.getVideoTracks()[0];
+            imageCapture = new ImageCapture(track);
+        }
+
+        function startVideo() {
+            navigator.mediaDevices.getUserMedia({video: {facingMode: { exact: "environment" }}})
+                .then(attachMediaStream)
+                .catch(error => {
+                navigator.mediaDevices.getUserMedia({video: true})
+                .then(attachMediaStream)
+                .catch(error => {
+                console.log('you are fooked');
+        })
+        });
+        }
+        function stopVideo() {
+            track = $('video')[0].srcObject.getVideoTracks()[0];
+            track.stop();
+        }
+        function takeSnapshot() {
+            // create a CANVAS element that is same size as the image
+            imageCapture.takePhoto()
+                .then(blob => createImageBitmap(blob))
+        .then(img => {
+                var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            data = canvas.toDataURL('image/png');
+            picdata = data.replace("data:image/png;base64,", "");
+            ocr(picdata);
+        });
+        }
+        function ocr(picdata) {
+            $('#videowrap').hide();
+            $('#loadingarea').show();
+            $.ajax({
+                type: "POST",
+                url: api + "/images",
+                cache: false,
+                Accept: "application/json",
+                contentType: "text/plain",
+                processData: false,
+                data: picdata,
+                success: function (res) {
+                    $('#take-pic-cancel').click();
+                    $('#videowrap').show();
+                    $('#loadingarea').hide();
+                    $('#merchant').val(res.merchantName);
+                    $('#amount').val(res.amount);
+                    $('#add-receipt').click();
+                },
+                error: function () {
+                    swal(
+                        'Oops...',
+                        'Something went wrong!',
+                        'error'
+                    );
+                    $('#videowrap').show();
+                    $('#loadingarea').hide();
+                }
+            });
+        }
+
+        $(function(){
+            $('#start-camera').on('click', startVideo);
+            $('#take-pic-cancel').on('click', stopVideo);
+            $('#close-camera').on('click', stopVideo);
+            $('#take-pic').on('click', takeSnapshot);
+        })
+    </script>
 </head>
 
 <body>
 <DIV id="container" class="col-xs-12 col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 container">
     <div class="row">
-        <h1 class="col-sm-6">My receipts</h1>
-        <a id="add-receipt" class="btn btn-info btn-lg btn-add col-sm-6" data-toggle="modal" data-target="#addmodal">Add
-            Receipt</a>
+        <h1 class="col-sm-12" style="text-align: center">My receipts</h1>
+        <div class="col-sm-6 col-xs-12">
+            <a id="add-receipt" class="btn btn-info btn-lg btn-add" data-toggle="modal" data-target="#addmodal">Add
+                Receipt</a>
+        </div>
+        <div class="col-sm-6 col-xs-12" style="text-align: right">
+            <a id="start-camera" class="btn btn-info btn-lg btn-add float-sm-right" data-toggle="modal" data-target="#cameramodal"><i class="glyphicon glyphicon-camera"></i></a>
+        </div>
     </div>
     <table class="table table-hover table-bordered">
         <thead class="receipt-th thead-default">
@@ -109,7 +267,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="exampleModalLabel">New Receipt</h4>
+                <h4 class="modal-title" id="addModalLabel">New Receipt</h4>
             </div>
             <div class="modal-body">
                 <form>
@@ -127,6 +285,32 @@
             <div class="modal-footer">
                 <button id="cancel-receipt" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button id="save-receipt" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="cameramodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button id="close-camera" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="cameraModalLabel">Take a Snap of your Receipt</h4>
+            </div>
+            <div class="modal-body">
+                <div id="videowrap">
+                    <video autoplay></video>
+                </div>
+                <div id="loadingarea" style="display: none;">
+                    <div style="text-align:center">
+                        <div class="loader">Loading...</div>
+                        <h1>Recognizing, Please Wait...</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="take-pic-cancel" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="take-pic" type="button" class="btn btn-primary">Snap</button>
             </div>
         </div>
     </div>
@@ -241,10 +425,10 @@
             );
             return
         }
-        if (!(Math.floor(amount) == amount) || !$.isNumeric(amount)) {
+        if (!$.isNumeric(amount)) {
             swal(
                 'Oops...',
-                'Amount must be an integer!',
+                'Amount must be numeric!',
                 'error'
             );
             $('#amount').val(null);
@@ -252,7 +436,7 @@
         }
         data = {
             "merchant": merchant,
-            "amount": parseInt(amount)
+            "amount": parseFloat(amount)
         };
         $.ajax({
             type: "POST",
@@ -280,5 +464,4 @@
     });
 </script>
 </body>
-
 </html>
