@@ -39,6 +39,23 @@
             width: 100px;
         }
 
+        tr {
+            text-align: center;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        table td {
+            vertical-align: middle !important;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         .add-tag {
             margin-top: 5px;
             margin-bottom: 5px;
@@ -156,84 +173,6 @@
             }
         }
     </style>
-    <script>
-        var imageCapture;
-
-        function attachMediaStream(mediaStream) {
-            $('video')[0].srcObject = mediaStream;
-
-            // Saving the track allows us to capture a photo
-            const track = mediaStream.getVideoTracks()[0];
-            imageCapture = new ImageCapture(track);
-        }
-
-        function startVideo() {
-            navigator.mediaDevices.getUserMedia({video: {facingMode: { exact: "environment" }}})
-                .then(attachMediaStream)
-                .catch(error => {
-                navigator.mediaDevices.getUserMedia({video: true})
-                .then(attachMediaStream)
-                .catch(error => {
-                console.log('you are fooked');
-        })
-        });
-        }
-        function stopVideo() {
-            track = $('video')[0].srcObject.getVideoTracks()[0];
-            track.stop();
-        }
-        function takeSnapshot() {
-            // create a CANVAS element that is same size as the image
-            imageCapture.takePhoto()
-                .then(blob => createImageBitmap(blob))
-        .then(img => {
-                var canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            canvas.getContext('2d').drawImage(img, 0, 0);
-            data = canvas.toDataURL('image/png');
-            picdata = data.replace("data:image/png;base64,", "");
-            ocr(picdata);
-        });
-        }
-        function ocr(picdata) {
-            $('#videowrap').hide();
-            $('#loadingarea').show();
-            $.ajax({
-                type: "POST",
-                url: api + "/images",
-                cache: false,
-                Accept: "application/json",
-                contentType: "text/plain",
-                processData: false,
-                data: picdata,
-                success: function (res) {
-                    $('#take-pic-cancel').click();
-                    $('#videowrap').show();
-                    $('#loadingarea').hide();
-                    $('#merchant').val(res.merchantName);
-                    $('#amount').val(res.amount);
-                    $('#add-receipt').click();
-                },
-                error: function () {
-                    swal(
-                        'Oops...',
-                        'Something went wrong!',
-                        'error'
-                    );
-                    $('#videowrap').show();
-                    $('#loadingarea').hide();
-                }
-            });
-        }
-
-        $(function(){
-            $('#start-camera').on('click', startVideo);
-            $('#take-pic-cancel').on('click', stopVideo);
-            $('#close-camera').on('click', stopVideo);
-            $('#take-pic').on('click', takeSnapshot);
-        })
-    </script>
 </head>
 
 <body>
@@ -251,15 +190,17 @@
     <table class="table table-hover table-bordered">
         <thead class="receipt-th thead-default">
         <tr>
-            <th class="receipt-td">Time</th>
-            <th class="receipt-td">Merchant</th>
-            <th class="receipt-td">$</th>
-            <th class="receipt-td">Tags</th>
+            <th>Time</th>
+            <th>Merchant</th>
+            <th>$</th>
+            <th>Tags</th>
+            <th>Thumbnails</th>
         </tr>
         </thead>
         <tbody id="receiptList">
         </tbody>
     </table>
+    <img id="current_thumbnail" style="display:none;"/>
 </DIV>
 <div class="modal fade" id="addmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
@@ -319,6 +260,102 @@
     // This is the idiomatic way to ensure that JQuery does not
     // execute until the page has loaded
     const api = ""; // <- do not need a root api URL if this page is served directly by the API
+    var imageCapture;
+    var originalwidth;
+    var originalheight;
+    function attachMediaStream(mediaStream) {
+        $('video')[0].srcObject = mediaStream;
+
+        // Saving the track allows us to capture a photo
+        const track = mediaStream.getVideoTracks()[0];
+        imageCapture = new ImageCapture(track);
+    }
+
+    function startVideo() {
+        navigator.mediaDevices.getUserMedia({video: {facingMode: { exact: "environment" }}})
+            .then(attachMediaStream)
+            .catch(error => {
+            navigator.mediaDevices.getUserMedia({video: true})
+            .then(attachMediaStream)
+            .catch(error => {
+            console.log('you are fooked');
+    })
+    });
+    }
+
+    function stopVideo() {
+        track = $('video')[0].srcObject.getVideoTracks()[0];
+        track.stop();
+    }
+
+    function takeSnapshot() {
+        // create a CANVAS element that is same size as the image
+        imageCapture.grabFrame()
+        .then(img => {
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            originalwidth = img.width;
+            originalheight = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            data = canvas.toDataURL('image/png');
+            picdata = data.replace("data:image/png;base64,", "");
+            ocr(picdata, img, canvas.width, canvas.height);
+        });
+    }
+
+    function ocr(picdata, img) {
+        $('#videowrap').hide();
+        $('#loadingarea').show();
+        $.ajax({
+            type: "POST",
+            url: api + "/images",
+            cache: false,
+            Accept: "application/json",
+            contentType: "text/plain",
+            processData: false,
+            data: picdata,
+            success: function (res) {
+                $('#take-pic-cancel').click();
+                $('#videowrap').show();
+                $('#loadingarea').hide();
+                var canvas = document.createElement('canvas');
+                canvas.width = res.br_x - res.tl_x;
+                canvas.height = res.br_y - res.tl_y;
+                canvas.getContext('2d').drawImage(img, res.tl_x, res.tl_y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+                data = canvas.toDataURL('image/png');
+                $('#current_thumbnail').attr("src", data);
+                $('#merchant').val(res.merchantName);
+                $('#amount').val(res.amount);
+                if((res.merchantName == null || res.merchantName == "")  && (res.amount == null || res.amount == "")){
+                    swal({
+                        title: 'Sorry we can not recognize the snapshot!',
+                        text: 'Please type yourself or try again.',
+                        timer: 5000
+                    }).then(
+                        function () {},
+                        // handling the promise rejection
+                        function (dismiss) {
+                            if (dismiss === 'timer') {
+                                //console.log('I was closed by the timer')
+                            }
+                        }
+                    )
+                }
+                $('#add-receipt').click();
+            },
+            error: function () {
+                swal(
+                    'Oops...',
+                    'Something went wrong!',
+                    'error'
+                );
+                $('#videowrap').show();
+                $('#loadingarea').hide();
+            }
+        });
+    }
+
     $('#receiptList').on("click", ".tag", function () {
         tagValue = $(this).find("span").text();
         id = $(this).parent().attr('receipt-id');
@@ -340,10 +377,12 @@
             }
         });
     });
+
     $('#receiptList').on("click", ".add-tag", function () {
         $(this).next().show();
         $(this).next().focus();
     });
+
     $('#receiptList').on("keypress", ".tag_input", function (event) {
         if (event.keyCode == 13) {
             tagValue = $(this).val();
@@ -402,8 +441,9 @@
                     '            <td class="amount">' + receipt.value + '</td>\n' +
                     '            <td class="tags" receipt-id="' + receipt.id + '">\n' +
                     '                <button type="button" class="btn btn-info btn-circle add-tag"><i class="glyphicon glyphicon-plus"></i></button>\n' +
-                    '                <input placeholder="Enter Tag" class="tag_input" type="text" receipt-id="' + receipt.id + '">\n' +
+                    '                <input placeholder="Enter Tag" class="tag_input" type="text" receipt-id="' + receipt.id + '"><br>\n' +
                     '            </td>\n' +
+                    '            <td><img src="' + receipt.base64string + '"/></td>' +
                     '        </tr>').appendTo($("#receiptList"));
             }
             get_all_tags();
@@ -413,10 +453,16 @@
     $('#cancel-receipt').click(function () {
         $('#merchant').val("");
         $('#amount').val("");
+        $('#current_thumbnail').attr("src", "");
     });
+
     $('#save-receipt').click(function () {
         merchant = $('#merchant').val();
         amount = $('#amount').val();
+        base64string = $('#current_thumbnail').attr("src");
+        if(base64string){
+            $('#current_thumbnail').attr("src", "");
+        }
         if (merchant.length == 0) {
             swal(
                 'Oops...',
@@ -436,7 +482,8 @@
         }
         data = {
             "merchant": merchant,
-            "amount": parseFloat(amount)
+            "amount": parseFloat(amount),
+            "base64string": base64string
         };
         $.ajax({
             type: "POST",
@@ -459,8 +506,13 @@
             }
         });
     });
+
     $(function () {
         get_all_receipts();
+        $('#start-camera').on('click', startVideo);
+        $('#take-pic-cancel').on('click', stopVideo);
+        $('#close-camera').on('click', stopVideo);
+        $('#take-pic').on('click', takeSnapshot);
     });
 </script>
 </body>

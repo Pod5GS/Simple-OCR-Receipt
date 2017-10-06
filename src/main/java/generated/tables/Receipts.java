@@ -36,7 +36,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Receipts extends TableImpl<ReceiptsRecord> {
 
-	private static final long serialVersionUID = 399889549;
+	private static final long serialVersionUID = 900505790;
 
 	/**
 	 * The reference instance of <code>public.receipts</code>
@@ -75,6 +75,11 @@ public class Receipts extends TableImpl<ReceiptsRecord> {
 	 * The column <code>public.receipts.receipt_type</code>.
 	 */
 	public final TableField<ReceiptsRecord, Integer> RECEIPT_TYPE = createField("receipt_type", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+	/**
+	 * The column <code>public.receipts.base64_string</code>.
+	 */
+	public final TableField<ReceiptsRecord, String> BASE64_STRING = createField("base64_string", org.jooq.impl.SQLDataType.VARCHAR.length(2147483647), this, "");
 
 	/**
 	 * Create a <code>public.receipts</code> table reference

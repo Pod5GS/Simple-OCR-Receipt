@@ -12,6 +12,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import static java.lang.System.out;
+
 @Path("/images")
 @Consumes(MediaType.TEXT_PLAIN)
 @Produces(MediaType.APPLICATION_JSON)
@@ -55,7 +57,7 @@ public class ReceiptImageController {
 //                out.printf("Position : %s\n", annotation.getBoundingPoly());
 //                out.printf("Text: %s\n", annotation.getDescription());
 //            }
-
+            // Extract merchantName and amount
             TextAnnotation fullTextAnnotation = res.getFullTextAnnotation();
             String texts = fullTextAnnotation.getText();
             String[] textList = texts.split("\n");
@@ -83,7 +85,23 @@ public class ReceiptImageController {
                     amount = null;
                 }
             }
-            return new ReceiptSuggestionResponse(merchantName, amount);
+            int tl_x = 0;
+            int tl_y = 0;
+            int br_x = 0;
+            int br_y = 0;
+            try{
+                EntityAnnotation annotation = res.getTextAnnotationsList().get(0);
+                BoundingPoly poly = annotation.getBoundingPoly();
+                Vertex tl = poly.getVertices(0);
+                Vertex br = poly.getVertices(2);
+                tl_x = tl.getX();
+                tl_y = tl.getY();
+                br_x = br.getX();
+                br_y = br.getY();
+            }catch (Exception e){
+                out.print("not a receipt\n");
+            }
+            return new ReceiptSuggestionResponse(merchantName, amount, tl_x, tl_y, br_x, br_y);
         }
     }
 }
