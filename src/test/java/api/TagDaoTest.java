@@ -21,8 +21,8 @@ public class TagDaoTest {
         ReceiptDao receiptDao = new ReceiptDao(jooqConfig);
         TagDao tagDao = new TagDao(jooqConfig);
         // Create two Receipts
-        receiptDao.insert("Trader Joes", BigDecimal.valueOf(22.04));
-        receiptDao.insert("Best Buy", BigDecimal.valueOf(816.5));
+        receiptDao.insert("Trader Joes", BigDecimal.valueOf(22.04), "afdadfafdafd");
+        receiptDao.insert("Best Buy", BigDecimal.valueOf(816.5), "dfadfafasfdaf");
         // Tag Receipts
         tagDao.toggleTag(receiptDao.getReceiptByMerchant("Trader Joes").getId(), "Grocery");
         tagDao.toggleTag(receiptDao.getReceiptByMerchant("Best Buy").getId(), "Electronics");
