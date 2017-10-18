@@ -5,7 +5,7 @@ Simple-OCR-Receipt
 ============
 This is course project of Cornell CS 5356 Startup Systems.
 
-A simple website using google OCR api to extract merchant name and total amout from a receipt, displaying them in a table and storing them into database. Live Demo: https://www.cw829.com.
+A simple website using google OCR api to extract merchant name and total amout from a receipt, displaying them in a table and storing them into database. Live Demo: https://www.cw829.me.
 
 To build and run with docker:
 1. Run `./gradlew distTar` _this tells gradle to make a .tar file containing the java application code and all dependencies_
