@@ -1,9 +1,11 @@
-[![CircleCI](https://circleci.com/gh/Pod5GS/skeleton.svg?style=svg)](https://circleci.com/gh/Pod5GS/skeleton)
+[![CircleCI](https://circleci.com/gh/Pod5GS/Simple-OCR-Receipt.svg?style=svg)](https://circleci.com/gh/Pod5GS/Simple-OCR-Receipt)
 
 
-skeleton
+Simple-OCR-Receipt
 ============
-A super simple foundation for building a scalable RESTful HTTP servers
+This is course project of Cornell CS 5356 Startup Systems.
+
+A simple website using google OCR api to extract merchant name and total amout from a receipt, displaying them in a table and storing them into database. Live Demo: https://www.cw829.com.
 
 To build and run with docker:
 1. Run `./gradlew distTar` _this tells gradle to make a .tar file containing the java application code and all dependencies_
